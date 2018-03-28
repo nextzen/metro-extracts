@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nextzen Metro Extracts</title>
+</head>
+<body>
+    {% for region_name, countries in feature_tree.items() %}
+    <h2>{{ region_name }}</h2>
+    {% for country_name, metros in countries.items() %}
+    {% for metro_name, feature in metros.items() %}
+    <a href="#{{ feature['id'] }}">{{ metro_name }}, {{ country_name }}</a>
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+
+
+    {% for region_name, countries in feature_tree.items() %}
+    <h2><a name="{{ region_name }}">{{ region_name }}</a></h2>
+    {% for country_name, metros in countries.items() %}
+    <h3><a name="{{ country_name }}">{{ country_name }}</a></h3>
+    {% for metro_name, feature in metros.items() %}
+    <h4><a name="{{ feature['id'] }}">{{ metro_name }}</a></h4>
+    <ul>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.imposm-geojson.zip">imposm geojson</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.imposm-shapefiles.zip">imposm shapefiles</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.land.coastline.zip">land coastline</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.water.coastline.zip">water coastline</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm.bz2">OSM (bz2)</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm.pbf">OSM (pbf)</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm2pgsql-geojson.zip">osm2pgsql geojson</a></li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm2pgsql-shapefiles.zip">osm2pgsql shapefiles</a></li>
+    </ul>
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+</body>
+</html>
