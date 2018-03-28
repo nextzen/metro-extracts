@@ -4,6 +4,8 @@
     <title>Nextzen Metro Extracts</title>
 </head>
 <body>
+    <h1>Nextzen Metro Extracts</h1>
+
     {% for region_name, countries in feature_tree.items() %}
     <h2>{{ region_name }}</h2>
     {% for country_name, metros in countries.items() %}
@@ -13,6 +15,7 @@
     {% endfor %}
     {% endfor %}
 
+    <hr>
 
     {% for region_name, countries in feature_tree.items() %}
     <h2><a name="{{ region_name }}">{{ region_name }}</a></h2>
@@ -21,14 +24,16 @@
     {% for metro_name, feature in metros.items() %}
     <h4><a name="{{ feature['id'] }}">{{ metro_name }}</a></h4>
     <ul>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.imposm-geojson.zip">imposm geojson</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.imposm-shapefiles.zip">imposm shapefiles</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.land.coastline.zip">land coastline</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.water.coastline.zip">water coastline</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm.bz2">OSM (bz2)</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm.pbf">OSM (pbf)</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm2pgsql-geojson.zip">osm2pgsql geojson</a></li>
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.osm2pgsql-shapefiles.zip">osm2pgsql shapefiles</a></li>
+        {% for suffix, typename in file_type_infos.items() %}
+        {% set finfo = file_infos[feature['id']].get(suffix) %}
+        {% if finfo %}
+        {% set fsize = finfo.get('size') %}
+        {% set flastmod = finfo.get('last_modified').strftime('%Y-%m-%d') %}
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.{{ suffix }}">{{ typename }}</a> ({{ fsize }} bytes, {{ flastmod }})</li>
+        {% else %}
+        <li>{{ typename }} (missing?)</li>
+        {% endif %}
+        {% endfor %}
     </ul>
     {% endfor %}
     {% endfor %}

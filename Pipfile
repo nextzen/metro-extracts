@@ -9,6 +9,7 @@ name = "pypi"
 
 "jinja2" = "*"
 requests = "*"
+"boto3" = "*"
 
 
 [dev-packages]
