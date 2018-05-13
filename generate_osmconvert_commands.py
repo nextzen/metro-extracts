@@ -33,11 +33,11 @@ with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
                 "-B=/mnt/tmp/{id}.poly "
                 "--hash-memory=1500 "
                 "--drop-broken-refs "
-                "-o /mnt/planet/{id}.osm.pbf"
+                "> /mnt/planet/{id}.osm.pbf"
             " && "
             "osmconvert /mnt/planet/{id}.osm.pbf "
                 "--out-osm "
-                "/mnt/panet/{id}.osm "
+                "> /mnt/planet/{id}.osm "
             " && "
             "pbzip2 -f /mnt/planet/{id}.osm\n".format(
                 id=feature_id,
