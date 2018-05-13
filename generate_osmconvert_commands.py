@@ -30,7 +30,7 @@ with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
         c.write(
             "osmconvert /mnt/planet/planet-latest.o5m "
                 "--out-pbf "
-                "-B={id}.poly "
+                "-B=/mnt/tmp/{id}.poly "
                 "--hash-memory=1500 "
                 "--drop-broken-refs "
                 "-o /mnt/planet/{id}.osm.pbf"
