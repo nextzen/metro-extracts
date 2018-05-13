@@ -8,12 +8,10 @@ import requests
 resp = requests.get("https://raw.githubusercontent.com/nextzen/metro-extracts/master/cities.geojson")
 resp.raise_for_status()
 
-features = resp.json()
-
 with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
-    for feature in features.get('features'):
-        feature_id = features['id']
-        with open(os.path.join('/mnt/tmp', feature['id'] + '.poly'), 'w') as f:
+    for feature in resp.json().get('features'):
+        feature_id = feature['id']
+        with open(os.path.join('/mnt/tmp', feature_id + '.poly'), 'w') as f:
             f.write(feature_id + '\n')
             for n, ring in enumerate(feature['geometry']['coordinates']):
                 if n == 0:
