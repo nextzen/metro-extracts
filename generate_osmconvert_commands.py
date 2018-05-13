@@ -11,7 +11,7 @@ resp.raise_for_status()
 with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
     for feature in resp.json().get('features'):
         feature_id = feature['id']
-        with open(os.path.join('/mnt/tmp', feature_id + '.poly'), 'w') as f:
+        with open(os.path.join('/mnt/poly', feature_id + '.poly'), 'w') as f:
             f.write(feature_id + '\n')
             for n, ring in enumerate(feature['geometry']['coordinates']):
                 if n == 0:
@@ -30,9 +30,10 @@ with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
         c.write(
             "osmconvert /mnt/planet/planet-latest.o5m "
                 "--out-pbf "
-                "-B=/mnt/tmp/{id}.poly "
+                "-B=/mnt/poly/{id}.poly "
                 "--hash-memory=1500 "
                 "--drop-broken-refs "
+                "-t=/mnt/tmp/osmconvert_tempfile "
                 "> /mnt/planet/{id}.osm.pbf"
             " && "
             "osmconvert /mnt/planet/{id}.osm.pbf "
