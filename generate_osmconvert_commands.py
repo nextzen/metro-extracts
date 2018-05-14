@@ -38,7 +38,7 @@ with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
             " && "
             "osmconvert /mnt/planet/{id}.osm.pbf "
                 "--out-osm "
-                "> /mnt/planet/{id}.osm "
+                "> /mnt/planet/{id}.osm"
             " && "
             "pbzip2 -f /mnt/planet/{id}.osm\n".format(
                 id=feature_id,
