@@ -11,7 +11,7 @@ mkdir -p /mnt/shp/${slug}-imposm
   -cachedir /mnt/shp/${slug}-imposm \
   -srid 4326 \
   -write \
-  -connection postgis://localhost/ubuntu?prefix=${prefix}_ \
+  -connection postgis://osm:osm@localhost/osm?prefix=${prefix}_ \
   -deployproduction
 
 declare -a arr=('admin' 'aeroways' 'amenities' 'buildings' 'landusages' 'landusages_gen0' 'landusages_gen1' 'places' 'roads' 'roads_gen0' 'roads_gen1' 'transport_areas' 'transport_points' 'waterareas' 'waterareas_gen0' 'waterareas_gen1' 'waterways')
@@ -20,7 +20,7 @@ for i in ${arr[@]}; do
   pgsql2shp \
     -rk \
     -f /mnt/shp/${slug}-imposm/${slug}_osm_${i}.shp \
-    ubuntu \
+    -h localhost -P osm -u osm osm \
     ${prefix}_${i}
 
   ogr2ogr \
@@ -43,5 +43,5 @@ zip -j /mnt/shp/${slug}.imposm-geojson.zip \
 rm -r /mnt/shp/${slug}-imposm
 
 for i in ${arr[@]}; do
-  echo "DROP TABLE ${prefix}_${i} CASCADE" | psql -d ubuntu
+  echo "DROP TABLE ${prefix}_${i} CASCADE" | psql postgresql://osm:osm@localhost/osm
 done

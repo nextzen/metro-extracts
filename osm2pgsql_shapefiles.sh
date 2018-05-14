@@ -16,15 +16,15 @@ osm2pgsql -sluc \
 
 pgsql2shp -rk \
   -f /mnt/shp/${slug}_osm_point.shp \
-  ubuntu \
+  -h localhost -P osm -u osm osm \
   ${prefix}_point
 pgsql2shp -rk \
   -f /mnt/shp/${slug}_osm_polygon.shp \
-  ubuntu \
+  -h localhost -P osm -u osm osm \
   ${prefix}_polygon
 pgsql2shp -rk \
   -f /mnt/shp/${slug}_osm_line.shp \
-  ubuntu \
+  -h localhost -P osm -u osm osm \
   ${prefix}_line
 
 # generate geojson from shp files
@@ -66,10 +66,10 @@ rm /mnt/shp/${slug}_osm_*.*
 
 # clean up the db
 #
-echo "DROP TABLE ${prefix}_line"    | psql -d ubuntu
-echo "DROP TABLE ${prefix}_nodes"   | psql -d ubuntu
-echo "DROP TABLE ${prefix}_point"   | psql -d ubuntu
-echo "DROP TABLE ${prefix}_polygon" | psql -d ubuntu
-echo "DROP TABLE ${prefix}_rels"    | psql -d ubuntu
-echo "DROP TABLE ${prefix}_roads"   | psql -d ubuntu
-echo "DROP TABLE ${prefix}_ways"    | psql -d ubuntu
+echo "DROP TABLE ${prefix}_line"    | psql postgresql://osm:osm@localhost/osm
+echo "DROP TABLE ${prefix}_nodes"   | psql postgresql://osm:osm@localhost/osm
+echo "DROP TABLE ${prefix}_point"   | psql postgresql://osm:osm@localhost/osm
+echo "DROP TABLE ${prefix}_polygon" | psql postgresql://osm:osm@localhost/osm
+echo "DROP TABLE ${prefix}_rels"    | psql postgresql://osm:osm@localhost/osm
+echo "DROP TABLE ${prefix}_roads"   | psql postgresql://osm:osm@localhost/osm
+echo "DROP TABLE ${prefix}_ways"    | psql postgresql://osm:osm@localhost/osm
