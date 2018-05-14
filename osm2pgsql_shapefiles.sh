@@ -55,7 +55,8 @@ zip -j \
   /mnt/shp/${slug}_osm_*.shp \
   /mnt/shp/${slug}_osm_*.prj \
   /mnt/shp/${slug}_osm_*.dbf \
-  /mnt/shp/${slug}_osm_*.shx
+  /mnt/shp/${slug}_osm_*.shx \
+  /mnt/shp/${slug}_osm_*.cpg
 zip -j \
   /mnt/shp/${slug}.osm2pgsql-geojson.zip \
   /mnt/shp/${slug}_osm_*.geojson

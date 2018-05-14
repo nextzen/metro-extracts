@@ -36,7 +36,8 @@ zip -j /mnt/shp/${slug}.imposm-shapefiles.zip \
   /mnt/shp/${slug}-imposm/${slug}_osm_*.shp \
   /mnt/shp/${slug}-imposm/${slug}_osm_*.prj \
   /mnt/shp/${slug}-imposm/${slug}_osm_*.dbf \
-  /mnt/shp/${slug}-imposm/${slug}_osm_*.shx
+  /mnt/shp/${slug}-imposm/${slug}_osm_*.shx \
+  /mnt/shp/${slug}-imposm/${slug}_osm_*.cpg
 zip -j /mnt/shp/${slug}.imposm-geojson.zip \
   /mnt/shp/${slug}-imposm/${slug}_*.geojson
 
