@@ -7,7 +7,7 @@ import json
 with open('cities.geojson', 'r') as f:
     data = json.load(f)
 
-with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
+with open(os.path.join('/mnt/tmp', 'parallel_osmconvert_commands.txt'), 'w') as c:
     for feature in data.get('features'):
         feature_id = feature['id']
         with open(os.path.join('/mnt/poly', feature_id + '.poly'), 'w') as f:
