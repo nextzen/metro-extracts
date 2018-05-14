@@ -1,15 +1,14 @@
 import os
 import json
-import requests
 
 # Fetches the cities.geojson file, converts it to .poly format for osmconvert,
 # and writes out a file with commands to use with parallel
 
-resp = requests.get("https://raw.githubusercontent.com/nextzen/metro-extracts/master/cities.geojson")
-resp.raise_for_status()
+with open('cities.geojson', 'r') as f:
+    data = json.load(f)
 
 with open(os.path.join('/mnt/tmp', 'commands.txt'), 'w') as c:
-    for feature in resp.json().get('features'):
+    for feature in data.get('features'):
         feature_id = feature['id']
         with open(os.path.join('/mnt/poly', feature_id + '.poly'), 'w') as f:
             f.write(feature_id + '\n')
