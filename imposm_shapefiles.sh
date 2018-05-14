@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 slug=$1
 prefix=${slug//-/_}
 

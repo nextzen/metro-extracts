@@ -1,7 +1,8 @@
 #!/bin/bash
-set -e
 slug=$1
 prefix=${slug//-/_}_osm
+
+export PGPASSWORD=osm
 
 # generate shp files
 #
@@ -11,7 +12,7 @@ osm2pgsql -sluc \
   -S /home/ubuntu/metro-extracts-master/osm2pgsql.style \
   -p ${prefix} \
   --number-processes 2 \
-  -d ubuntu \
+  -H localhost -U osm -d osm \
   /mnt/planet/${slug}.osm.pbf
 
 pgsql2shp -rk \
