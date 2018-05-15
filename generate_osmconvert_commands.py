@@ -4,7 +4,8 @@ import json
 # Fetches the cities.geojson file, converts it to .poly format for osmconvert,
 # and writes out a file with commands to use with parallel
 
-with open('cities.geojson', 'r') as f:
+cities_path = os.path.join(os.path.dirname(__file__), 'cities.geojson')
+with open(cities_path, 'r') as f:
     data = json.load(f)
 
 with open(os.path.join('/mnt/tmp', 'parallel_osmconvert_commands.txt'), 'w') as c:
