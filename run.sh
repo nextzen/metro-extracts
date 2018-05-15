@@ -62,7 +62,7 @@ osmconvert /mnt/planet/planet-latest.osm.pbf \
 # Generate extracts
 sudo apt-get install -y pbzip2 parallel
 cd /home/ubuntu
-mkdir -p /mnt/tmp /mnt/poly
+mkdir -p /mnt/tmp /mnt/poly /mnt/output
 python /home/ubuntu/metro-extracts-master/generate_osmconvert_commands.py
 
 parallel --no-notice \
