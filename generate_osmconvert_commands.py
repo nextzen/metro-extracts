@@ -33,13 +33,13 @@ with open(os.path.join('/mnt/tmp', 'parallel_osmconvert_commands.txt'), 'w') as 
                 "--hash-memory=1500 "
                 "--drop-broken-refs "
                 "-t=/mnt/tmp/osmconvert_tempfile "
-                "> /mnt/planet/{id}.osm.pbf"
+                "> /mnt/output/{id}.osm.pbf"
             " && "
-            "osmconvert /mnt/planet/{id}.osm.pbf "
+            "osmconvert /mnt/output/{id}.osm.pbf "
                 "--out-osm "
-                "> /mnt/planet/{id}.osm"
+                "> /mnt/output/{id}.osm"
             " && "
-            "pbzip2 -f /mnt/planet/{id}.osm\n".format(
+            "pbzip2 -f /mnt/output/{id}.osm\n".format(
                 id=feature_id,
             )
         )
