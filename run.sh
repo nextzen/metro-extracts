@@ -60,6 +60,25 @@ osmconvert /mnt/planet/planet-latest.osm.pbf \
     -o=/mnt/planet/planet-latest.o5m > /mnt/logs/osmconvert_planet.log 2>&1
 
 # Generate extracts
+sudo apt-get install -y \
+    libboost-program-options-dev \
+    libboost-dev \
+    libbz2-dev \
+    zlib1g-dev \
+    libexpat1-dev \
+    build-essential \
+    cmake
+curl -L https://github.com/osmcode/libosmium/archive/v2.14.0.tar.gz | tar xz
+mv libosmium-2.14.0 libosmium
+curl -L https://github.com/mapbox/protozero/archive/v1.6.2.tar.gz | tar xz
+mv protozero-1.6.2 protozero
+curl -L https://github.com/osmcode/osmium-tool/archive/v1.8.0.tar.gz | tar xz
+cd osmium-tool-1.8.0
+mkdir build
+cd build
+cmake ..
+make
+
 sudo apt-get install -y pbzip2 parallel
 cd /home/ubuntu
 mkdir -p /mnt/tmp /mnt/poly /mnt/output
