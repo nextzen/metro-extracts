@@ -38,6 +38,7 @@ sudo -u postgres psql -d osm -c "CREATE EXTENSION hstore;"
 sudo -u postgres psql -d osm -c "ALTER USER osm WITH PASSWORD 'osm';"
 
 ## Download the planet
+mkdir -p /mnt/planet
 wget --quiet \
     -O /mnt/planet/planet-latest.osm.pbf \
     https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
