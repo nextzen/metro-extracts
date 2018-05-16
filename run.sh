@@ -78,16 +78,18 @@ mkdir build
 cd build
 cmake ..
 make
+sudo make install
 
-sudo apt-get install -y pbzip2 parallel
 cd /home/ubuntu
-mkdir -p /mnt/tmp /mnt/poly /mnt/output
-python /home/ubuntu/metro-extracts-master/generate_osmconvert_commands.py
+mkdir -p /mnt/tmp /mnt/output
+python /home/ubuntu/metro-extracts-master/generate_osmium_export_config.py
 
-parallel --no-notice \
-    -j 24 \
-    -a /mnt/tmp/parallel_osmconvert_commands.txt \
-    --joblog /mnt/logs/parallel_osmconvert.log
+osmium extract \
+    --overwrite \
+    --no-progress \
+    --strategy=smart \
+    --config /mnt/tmp/osmium-config.json \
+    /mnt/planet/planet-latest.osm.pbf
 
 # Convert extracts to Shapefiles + GeoJSON
 curl -L https://imposm.org/static/rel/imposm3-0.4.0dev-20170519-3f00374-linux-x86-64.tar.gz | tar -zx
