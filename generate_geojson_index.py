@@ -20,11 +20,11 @@ KEY_PATTERNS = {
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('s3_url_prefix', help="The S3 URL prefix for links e.g. https://s3.amazonaws.com/bucket/planet_timestamp/")
+    parser.add_argument('s3_url_prefix', help="The S3 URL prefix for links e.g. https://s3.amazonaws.com/bucket/")
     args = parser.parse_args()
 
     with open(os.path.join(THIS_DIR, "cities.geojson"), "r") as f:
-        data = json.load(f).get('features')
+        features = json.load(f).get('features')
 
     with open('/mnt/planet/planet-latest.osm.pbf.timestamp', 'r') as f:
         planet_timestamp = f.read().strip()
@@ -37,10 +37,13 @@ if __name__ == '__main__':
 
     def item(feature_id, file_suffix):
         path = os.path.join(OUTPUT_DIR, '%s.%s' % (feature_id, file_suffix))
+        if not os.path.exists(path):
+            return None
+
         result = os.stat(path)
 
         return {
-            'size': results.st_size,
+            'size': result.st_size,
             'url': '{s3_prefix}{feature_id}.{suffix}'.format(
                 s3_prefix=args.s3_url_prefix,
                 feature_id=feature_id,
@@ -48,7 +51,7 @@ if __name__ == '__main__':
             )
         }
 
-    for feature in data.get('features'):
+    for feature in features:
         feature_id = feature['id']
 
         out_feature = feature.copy()
