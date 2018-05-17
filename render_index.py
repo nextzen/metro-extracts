@@ -1,3 +1,4 @@
+import argparse
 import boto3
 import json
 import os
@@ -17,7 +18,7 @@ KEY_PATTERNS = {
 }
 
 
-def render_html():
+def render_html(s3_prefix=None):
     j2_env = Environment(loader=FileSystemLoader(THIS_DIR),
                          trim_blocks=True)
 
@@ -30,6 +31,7 @@ def render_html():
     paginator = client.get_paginator('list_objects_v2')
     response_iterator = paginator.paginate(
         Bucket='metro-extracts.nextzen.org',
+        Prefix=s3_prefix,
         Delimiter='/',
     )
     file_infos = defaultdict(lambda: defaultdict(dict))
@@ -59,8 +61,13 @@ def render_html():
         feature_tree=feature_tree,
         file_infos=file_infos,
         file_type_infos=KEY_PATTERNS,
+        s3_prefix=s3_prefix or '',
     )
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--prefix', help="The S3 prefix to base the index.html on")
+    args = parser.parse_args()
+
     with open('index.html', 'w') as f:
-        f.write(render_html())
+        f.write(render_html(args.prefix))
