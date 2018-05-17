@@ -4,7 +4,7 @@ set -x
 
 ## Set up the system and mount point
 
-sudo apt-get update -y && sudo apt-get upgrade -y
+sudo apt-get update -y
 sudo mkfs.xfs /dev/nvme1n1
 sudo mkdir -p /mnt
 sudo mount /dev/nvme1n1 /mnt
@@ -53,11 +53,6 @@ osmupdate --day --hour \
 
 date +%Y-%m-%d-%H-%M-%S --date=`osmconvert --out-timestamp /mnt/planet/planet-latest.osm.pbf` > \
     /mnt/planet/planet-latest.osm.pbf.timestamp
-
-# Convert the planet to o5m
-mkdir -p /mnt/logs
-osmconvert /mnt/planet/planet-latest.osm.pbf \
-    -o=/mnt/planet/planet-latest.o5m > /mnt/logs/osmconvert_planet.log 2>&1
 
 # Generate extracts
 sudo apt-get install -y \
