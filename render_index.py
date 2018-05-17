@@ -22,7 +22,7 @@ def render_html():
                          trim_blocks=True)
 
     city_features = []
-    with open("cities.geojson", "r") as f:
+    with open(os.path.join(THIS_DIR, "cities.geojson"), "r") as f:
         city_features = json.load(f).get('features')
 
     # List the S3 bucket and pull in the file size + timestamps
