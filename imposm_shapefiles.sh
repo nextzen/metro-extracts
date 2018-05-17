@@ -6,7 +6,7 @@ mkdir -p /mnt/shp/${slug}-imposm
 
 /home/ubuntu/imposm3-0.4.0dev-20170519-3f00374-linux-x86-64/imposm3 import \
   -mapping /home/ubuntu/metro-extracts-master/mapping.json \
-  -read /mnt/planet/${slug}.osm.pbf \
+  -read /mnt/output/${slug}.osm.pbf \
   -cachedir /mnt/shp/${slug}-imposm \
   -srid 4326 \
   -write \

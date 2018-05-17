@@ -13,7 +13,7 @@ osm2pgsql -sluc \
   -p ${prefix} \
   --number-processes 2 \
   -H localhost -U osm -d osm \
-  /mnt/planet/${slug}.osm.pbf
+  /mnt/output/${slug}.osm.pbf
 
 pgsql2shp -rk \
   -f /mnt/shp/${slug}_osm_point.shp \

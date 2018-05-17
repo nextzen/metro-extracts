@@ -60,15 +60,36 @@ osmconvert /mnt/planet/planet-latest.osm.pbf \
     -o=/mnt/planet/planet-latest.o5m > /mnt/logs/osmconvert_planet.log 2>&1
 
 # Generate extracts
-sudo apt-get install -y pbzip2 parallel
-cd /home/ubuntu
-mkdir -p /mnt/tmp /mnt/poly
-python /home/ubuntu/metro-extracts-master/generate_osmconvert_commands.py
+sudo apt-get install -y \
+    libboost-program-options-dev \
+    libboost-dev \
+    libbz2-dev \
+    zlib1g-dev \
+    libexpat1-dev \
+    build-essential \
+    cmake
+curl -L https://github.com/osmcode/libosmium/archive/v2.14.0.tar.gz | tar xz
+mv libosmium-2.14.0 libosmium
+curl -L https://github.com/mapbox/protozero/archive/v1.6.2.tar.gz | tar xz
+mv protozero-1.6.2 protozero
+curl -L https://github.com/osmcode/osmium-tool/archive/v1.8.0.tar.gz | tar xz
+cd osmium-tool-1.8.0
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
 
-parallel --no-notice \
-    -j 24 \
-    -a /mnt/tmp/parallel_osmconvert_commands.txt \
-    --joblog /mnt/logs/parallel_osmconvert.log
+cd /home/ubuntu
+mkdir -p /mnt/tmp /mnt/output
+python /home/ubuntu/metro-extracts-master/generate_osmium_export_config.py
+
+osmium extract \
+    --overwrite \
+    --no-progress \
+    --strategy=smart \
+    --config /mnt/tmp/osmium-config.json \
+    /mnt/planet/planet-latest.osm.pbf
 
 # Convert extracts to Shapefiles + GeoJSON
 curl -L https://imposm.org/static/rel/imposm3-0.4.0dev-20170519-3f00374-linux-x86-64.tar.gz | tar -zx
