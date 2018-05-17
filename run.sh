@@ -110,4 +110,16 @@ parallel --no-notice \
     /home/ubuntu/metro-extracts-master/imposm_shapefiles.sh
 
 # Upload result to S3
-aws s3 sync /mnt/output s3://metro-extracts.nextzen.org/$(cat /mnt/planet/planet-latest.osm.pbf.timestamp)
+sudo apt-get install -y awscli
+s3prefix=$(date +%Y-%m-%d-%H-%M --date=`cat /mnt/planet/planet-latest.osm.pbf.timestamp`)
+python metro-extracts-master/generate_geojson_index.py \
+    "https://s3.amazonaws.com/metro-extracts.nextzen.org/${s3prefix}/" > /mnt/output/index.geojson
+aws s3 sync \
+    --metadata="OsmPlanetDate=`cat /mnt/planet/planet-latest.osm.pbf.timestamp | tr -d '\n'`" \
+    --acl=public-read \
+    /mnt/output \
+    s3://metro-extracts.nextzen.org/$s3prefix
+aws s3 sync \
+    --acl=public-read \
+    /mnt/output/index.geojson \
+    s3://metro-extracts.nextzen.org/latest.geojson
