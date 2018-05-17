@@ -29,7 +29,7 @@
         {% if finfo %}
         {% set fsize = finfo.get('size') %}
         {% set flastmod = finfo.get('last_modified').strftime('%Y-%m-%d') %}
-        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ feature['id'] }}.{{ suffix }}">{{ typename }}</a> ({{ fsize }} bytes, {{ flastmod }})</li>
+        <li><a href="https://s3.amazonaws.com/metro-extracts.nextzen.org/{{ s3_prefix }}{{ feature['id'] }}.{{ suffix }}">{{ typename }}</a> ({{ fsize }} bytes, {{ flastmod }})</li>
         {% else %}
         <li>{{ typename }} (missing?)</li>
         {% endif %}
