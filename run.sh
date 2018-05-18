@@ -51,7 +51,7 @@ osmupdate --day --hour \
 && rm /mnt/planet/planet-latest.osm.pbf \
 && mv /mnt/planet/planet-latest-updated.osm.pbf /mnt/planet/planet-latest.osm.pbf
 
-date +%Y-%m-%d-%H-%M-%S --date=`osmconvert --out-timestamp /mnt/planet/planet-latest.osm.pbf` > \
+date --iso-8601=minutes --date=`osmconvert --out-timestamp /mnt/planet/planet-latest.osm.pbf` > \
     /mnt/planet/planet-latest.osm.pbf.timestamp
 
 # Generate extracts
@@ -92,9 +92,15 @@ done
 # Convert extracts to Shapefiles + GeoJSON
 curl -L https://imposm.org/static/rel/imposm3-0.4.0dev-20170519-3f00374-linux-x86-64.tar.gz | tar -zx
 sudo apt-get install -y jq osm2pgsql gdal-bin zip parallel
-mkdir -p /mnt/shp
+mkdir -p /mnt/shp /mnt/logs
 
 jq -r .features[].id /home/ubuntu/metro-extracts-master/cities.geojson > /mnt/tmp/cities.txt
+
+# Convert .osm.pbf to .osm.bz2
+parallel --no-notice \
+    -j 16 \
+    -a /mnt/tmp/cities.txt \
+    "osmium cat --overwrite --no-progress --output /mnt/output/{}.osm.bz2 /mnt/output/{}.osm.pbf"
 
 parallel --no-notice \
     -j 12 \
@@ -117,7 +123,8 @@ aws s3 sync \
     --acl=public-read \
     /mnt/output \
     s3://metro-extracts.nextzen.org/$s3prefix
-aws s3 sync \
+aws s3 cp \
+    --content-type=application/json \
     --acl=public-read \
     /mnt/output/index.geojson \
     s3://metro-extracts.nextzen.org/latest.geojson
