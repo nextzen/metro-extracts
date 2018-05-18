@@ -79,16 +79,19 @@ cd /home/ubuntu
 mkdir -p /mnt/tmp /mnt/output
 python /home/ubuntu/metro-extracts-master/generate_osmium_export_config.py
 
-osmium extract \
-    --overwrite \
-    --no-progress \
-    --strategy=smart \
-    --config /mnt/tmp/osmium-config.json \
-    /mnt/planet/planet-latest.osm.pbf
+for i in /mnt/tmp/osmium-config.*.json;
+do
+    osmium extract \
+        --overwrite \
+        --no-progress \
+        --strategy=smart \
+        --config $i \
+        /mnt/planet/planet-latest.osm.pbf
+done
 
 # Convert extracts to Shapefiles + GeoJSON
 curl -L https://imposm.org/static/rel/imposm3-0.4.0dev-20170519-3f00374-linux-x86-64.tar.gz | tar -zx
-sudo apt-get install -y jq osm2pgsql gdal-bin zip
+sudo apt-get install -y jq osm2pgsql gdal-bin zip parallel
 mkdir -p /mnt/shp
 
 jq -r .features[].id /home/ubuntu/metro-extracts-master/cities.geojson > /mnt/tmp/cities.txt
