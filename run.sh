@@ -117,7 +117,7 @@ parallel --no-notice \
 sudo apt-get install -y awscli
 s3prefix=$(date +%Y-%m-%d-%H-%M --date=`cat /mnt/planet/planet-latest.osm.pbf.timestamp`)
 python metro-extracts-master/generate_geojson_index.py \
-    "https://s3.amazonaws.com/metro-extracts.nextzen.org/${s3prefix}/" > /mnt/output/index.geojson
+    "https://metro-extracts.nextzen.org/${s3prefix}/" > /mnt/output/index.geojson
 aws s3 sync \
     --metadata="OsmPlanetDate=`cat /mnt/planet/planet-latest.osm.pbf.timestamp | tr -d '\n'`" \
     --acl=public-read \
