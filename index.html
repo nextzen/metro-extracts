@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<head>
+    <title>Nextzen Metro Extracts</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        body {
+            margin:0;
+            padding:20px;
+            font: normal 15px/25px 'Helvetica Neue', sans-serif;
+            color:#333;
+            margin-right:50%;
+        }
+        #map {
+            position:fixed;
+            top:0;
+            right:0;
+            bottom:0;
+            width:50%;
+        }
+    </style>
+    <link href='https://unpkg.com/leaflet@1.3.1/dist/leaflet.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+    <h1>Nextzen Metro Extracts</h1>
+    <p><span id="extracts_count"></span> extracts of OpenStreetMap data, generated from an OpenStreetMap data dump dated <span id="planet_timestamp"></span>.</p>
+    <p>This is an <a href='https://github.com/nextzen/metro-extracts'>open source project on GitHub that you can
+    improve.</a></p>
+
+    <div id='map'></div>
+    <div id='table'>
+        <div id='wrap'></div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@mapbox/leaflet-pip@1.1.0/leaflet-pip.js"></script>
+    <script src="https://unpkg.com/d3@5.4.0/dist/d3.min.js"></script>
+    <script type="text/javascript">
+var map = L.map('map').fitWorld();
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+}).addTo(map);
+
+d3.json("https://s3.amazonaws.com/metro-extracts.nextzen.org/latest.geojson").then(function(extracts) {
+    // extracts.features = imagery.features.sort(function(a,b) {
+    //     // sort by country code, then alphabetically
+    //     if (a.properties['country_code'] === b.properties['country_code']) {
+    //         return a.properties.name.toLowerCase() > b.properties.name.toLowerCase() ? 1 : -1;
+    //     }
+    //     if (a.properties['country_code'] === undefined) return -1;
+    //     if (b.properties['country_code'] === undefined) return 1;
+    //     if (a.properties['country_code'] > b.properties['country_code']) return 1;
+    //     return -1;
+    // })
+
+    d3.select('#extracts_count')
+        .text(extracts.features.length);
+    d3.select('#planet_timestamp')
+        .text(extracts.planet_timestamp);
+
+    var extractsLayer = L.geoJson(extracts, {
+        style: function(feature) {
+            return {
+                weight: 1,
+                color: 'gray',
+                fillOpacity: 0.1,
+                fillRule: 'nonzero'
+            }
+        }
+    })
+    .on('click', function(e) {
+        var matches = leafletPip.pointInLayer(e.latlng, extractsLayer, false);
+        if (!matches.length) return;
+        map.openPopup(
+            '<h3>Available extracts at this location:</h3>'+
+            matches.map(function(match) {
+                return '<a href="#' + match.feature.id + '">' + match.feature.properties.name + '</a>';
+            }).join('<br>'),
+            e.latlng
+        );
+    })
+    .addTo(map)
+
+    map.fitBounds(extractsLayer.getBounds());
+
+    var divs = d3.select('#wrap')
+        .selectAll('div')
+        .data(extracts.features)
+        .enter()
+        .append('div');
+
+    divs.append('a')
+        .attr('name', function(d) {
+            return d.id;
+        });
+
+    var extract_links = divs.append('h4')
+        .text(function(d) {
+            return d.properties.name + ", " + d.properties.country;
+        })
+        .on('click', function(d, i) {
+            d3.event.preventDefault();
+
+            var bounds = d3.geoBounds(d);
+            map.flyToBounds([bounds[0].reverse(), bounds[1].reverse()], {duration:1.0});
+
+            extractsLayer.eachLayer(function(layer) {
+                if (layer.feature === d) {
+                    layer.setStyle({
+                        color: 'darkred',
+                        fillOpacity: 0.2
+                    });
+                    layer.bringToFront();
+                } else {
+                    layer.setStyle(extractsLayer.options.style(layer.feature))
+                }
+            });
+
+            extract_links.classed('active', function(d2, i2) {
+                return i2 == i;
+            });
+        });
+
+    var link_divs = divs.append('div');
+
+    // OSM PBFs
+    link_divs.append('a')
+        .attr('href', function(d) {
+            return d.properties['osm.pbf'] !== null ? d.properties['osm.pbf'].url : '#';
+        })
+        .text('.osm.pbf');
+    link_divs.append('span')
+        .text(function(d) {
+            return d.properties['osm.pbf'] !== null ? d.properties['osm.pbf'].size + " bytes" : '';
+        });
+
+    // OSM BZ2
+    link_divs.append('a')
+        .attr('href', function(d) {
+            return d.properties['osm.bz2'] !== null ? d.properties['osm.bz2'].url : '#';
+        })
+        .text('.osm.bz2');
+    link_divs.append('span')
+        .text(function(d) {
+            return d.properties['osm.bz2'] !== null ? d.properties['osm.bz2'].size + " bytes" : '';
+        });
+
+    // osm2pgsql shapefiles
+    link_divs.append('a')
+        .attr('href', function(d) {
+            return d.properties['osm2pgsql-shapefiles.zip'] !== null ? d.properties['osm2pgsql-shapefiles.zip'].url : '#';
+        })
+        .text('.osm2pgsql-shapefiles.zip');
+    link_divs.append('span')
+        .text(function(d) {
+            return d.properties['osm2pgsql-shapefiles.zip'] !== null ? d.properties['osm2pgsql-shapefiles.zip'].size + " bytes" : '';
+        });
+
+    // imposm shapefiles
+    link_divs.append('a')
+        .attr('href', function(d) {
+            return d.properties['imposm-shapefiles.zip'] !== null ? d.properties['imposm-shapefiles.zip'].url : '#';
+        })
+        .text('.imposm-shapefiles.zip');
+    link_divs.append('span')
+        .text(function(d) {
+            return d.properties['imposm-shapefiles.zip'] !== null ? d.properties['imposm-shapefiles.zip'].size + " bytes" : '';
+        });
+
+    // osm2pgsql geojson
+    link_divs.append('a')
+        .attr('href', function(d) {
+            return d.properties['osm2pgsql-geojson.zip'] !== null ? d.properties['osm2pgsql-geojson.zip'].url : '#';
+        })
+        .text('.osm2pgsql-geojson.zip');
+    link_divs.append('span')
+        .text(function(d) {
+            return d.properties['osm2pgsql-geojson.zip'] !== null ? d.properties['osm2pgsql-geojson.zip'].size + " bytes" : '';
+        });
+
+    // imposm geojson
+    link_divs.append('a')
+        .attr('href', function(d) {
+            return d.properties['imposm-geojson.zip'] !== null ? d.properties['imposm-geojson.zip'].url : '#';
+        })
+        .text('.imposm-geojson.zip');
+    link_divs.append('span')
+        .text(function(d) {
+            return d.properties['imposm-geojson.zip'] !== null ? d.properties['imposm-geojson.zip'].size + " bytes" : '';
+        });
+});
+    </script>
+</body>
