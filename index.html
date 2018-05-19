@@ -17,6 +17,12 @@
             bottom:0;
             width:50%;
         }
+        span.file-size {
+            padding-left: 3px;
+            padding-right: 3px;
+            color: #aaa;
+            font-size: smaller;
+        }
     </style>
     <link href='https://unpkg.com/leaflet@1.3.1/dist/leaflet.css' rel='stylesheet' type='text/css' />
 </head>
@@ -112,6 +118,21 @@ d3.json("/latest.geojson").then(function(extracts) {
 
     var link_divs = divs.append('div');
 
+    var bytesToString = function (bytes) {
+        // One way to write it, not the prettiest way to write it.
+
+        var fmt = d3.format('.0f');
+        if (bytes < 1024) {
+            return fmt(bytes) + 'B';
+        } else if (bytes < 1024 * 1024) {
+            return fmt(bytes / 1024) + 'kB';
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return fmt(bytes / 1024 / 1024) + 'MB';
+        } else {
+            return fmt(bytes / 1024 / 1024 / 1024) + 'GB';
+        }
+    }
+
     // OSM PBFs
     link_divs.append('a')
         .attr('href', function(d) {
@@ -119,8 +140,9 @@ d3.json("/latest.geojson").then(function(extracts) {
         })
         .text('.osm.pbf');
     link_divs.append('span')
+        .attr('class', 'file-size')
         .text(function(d) {
-            return d.properties['osm.pbf'] !== null ? d.properties['osm.pbf'].size + " bytes" : '';
+            return d.properties['osm.pbf'] !== null ? bytesToString(d.properties['osm.pbf'].size) : '';
         });
 
     // OSM BZ2
@@ -130,8 +152,9 @@ d3.json("/latest.geojson").then(function(extracts) {
         })
         .text('.osm.bz2');
     link_divs.append('span')
+        .attr('class', 'file-size')
         .text(function(d) {
-            return d.properties['osm.bz2'] !== null ? d.properties['osm.bz2'].size + " bytes" : '';
+            return d.properties['osm.bz2'] !== null ? bytesToString(d.properties['osm.bz2'].size) : '';
         });
 
     // osm2pgsql shapefiles
@@ -141,8 +164,9 @@ d3.json("/latest.geojson").then(function(extracts) {
         })
         .text('.osm2pgsql-shapefiles.zip');
     link_divs.append('span')
+        .attr('class', 'file-size')
         .text(function(d) {
-            return d.properties['osm2pgsql-shapefiles.zip'] !== null ? d.properties['osm2pgsql-shapefiles.zip'].size + " bytes" : '';
+            return d.properties['osm2pgsql-shapefiles.zip'] !== null ? bytesToString(d.properties['osm2pgsql-shapefiles.zip'].size) : '';
         });
 
     // imposm shapefiles
@@ -152,8 +176,9 @@ d3.json("/latest.geojson").then(function(extracts) {
         })
         .text('.imposm-shapefiles.zip');
     link_divs.append('span')
+        .attr('class', 'file-size')
         .text(function(d) {
-            return d.properties['imposm-shapefiles.zip'] !== null ? d.properties['imposm-shapefiles.zip'].size + " bytes" : '';
+            return d.properties['imposm-shapefiles.zip'] !== null ? bytesToString(d.properties['imposm-shapefiles.zip'].size) : '';
         });
 
     // osm2pgsql geojson
@@ -163,8 +188,9 @@ d3.json("/latest.geojson").then(function(extracts) {
         })
         .text('.osm2pgsql-geojson.zip');
     link_divs.append('span')
+        .attr('class', 'file-size')
         .text(function(d) {
-            return d.properties['osm2pgsql-geojson.zip'] !== null ? d.properties['osm2pgsql-geojson.zip'].size + " bytes" : '';
+            return d.properties['osm2pgsql-geojson.zip'] !== null ? bytesToString(d.properties['osm2pgsql-geojson.zip'].size) : '';
         });
 
     // imposm geojson
@@ -174,8 +200,9 @@ d3.json("/latest.geojson").then(function(extracts) {
         })
         .text('.imposm-geojson.zip');
     link_divs.append('span')
+        .attr('class', 'file-size')
         .text(function(d) {
-            return d.properties['imposm-geojson.zip'] !== null ? d.properties['imposm-geojson.zip'].size + " bytes" : '';
+            return d.properties['imposm-geojson.zip'] !== null ? bytesToString(d.properties['imposm-geojson.zip'].size) : '';
         });
 });
     </script>
