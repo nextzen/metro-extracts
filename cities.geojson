@@ -5979,6 +5979,42 @@
         },
         {
             "type": "Feature",
+            "id": "porto-alegre_brazil",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -51.30,
+                            -29.92
+                        ],
+                        [
+                            -51.00,
+                            -29.92
+                        ],
+                        [
+                            -51.00,
+                            -30.28
+                        ],
+                        [
+                            -51.30,
+                            -30.28
+                        ],
+                        [
+                            -51.30,
+                            -29.92
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "Porto Alegre",
+                "region": "south_america",
+                "country": "Brazil"
+            }
+        },
+        {
+            "type": "Feature",
             "id": "rome_italy",
             "geometry": {
                 "type": "Polygon",
