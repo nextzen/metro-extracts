@@ -3782,41 +3782,41 @@
             }
         },
         {
-      "type": "Feature",
-      "id": "louisville_kentucky",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -86.01058959960938,
-              38.06647354576796
-            ],
-            [
-              -85.41595458984375,
-              38.06647354576796
-            ],
-            [
-              -85.41595458984375,
-              38.38472766885085
-            ],
-            [
-              -86.01058959960938,
-              38.38472766885085
-            ],
-            [
-              -86.01058959960938,
-              38.06647354576796
-            ]
-          ]
-        ]
-      },
-        "properties": {
-        "name": "Louisville",
-        "region": "north_america",
-        "country": "United States"
-      }
-    },
+            "type": "Feature",
+            "id": "louisville_kentucky",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -86.01,
+                            38.06
+                        ],
+                        [
+                            -85.41,
+                            38.06
+                        ],
+                        [
+                            -85.41,
+                            38.38
+                        ],
+                        [
+                            -86.01,
+                            38.38
+                        ],
+                        [
+                            -86.01,
+                            38.06
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "Louisville",
+                "region": "north_america",
+                "country": "United States"
+            }
+        },
         {
             "type": "Feature",
             "id": "mexico-city_mexico",
